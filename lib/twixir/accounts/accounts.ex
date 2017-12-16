@@ -1,5 +1,6 @@
 defmodule Twixir.Accounts do
   import Ecto.Changeset
+  alias Twixir.Repo
   alias Twixir.Accounts.User
 
   @doc false
@@ -17,6 +18,10 @@ defmodule Twixir.Accounts do
     |> validate_required([:password])
     |> validate_length(:password, min: 6)
     |> put_password_hash
+  end
+
+  def create_user(changeset) do
+    Repo.insert(changeset)
   end
 
   defp put_password_hash(changeset) do

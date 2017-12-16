@@ -1,0 +1,28 @@
+<%= form_for @changeset, user_path(@conn, :create), fn f -> %>
+  <div class="form-group <%= error_class(f, :first_name) %>" >
+    <label for="first_name" class="control-label"> First Name </label>
+    <%= text_input f, :first_name, class: "form-control" %>
+    <%= error_tag f, :first_name %>
+  </div>
+
+  <div class="form-group <%= error_class(f, :last_name) %>">
+    <label for="last_name" class="control-label"> Last Name </label>
+    <%= text_input f, :last_name, class: "form-control" %>
+    <%= error_tag f, :last_name %>
+  </div>
+
+  <div class="form-group <%= error_class(f, :email) %>">
+    <label for="email" class="control-label"> Email </label>
+    <%= text_input f, :email, class: "form-control" %>
+    <%= error_tag f, :email %>
+  </div>
+
+  <div class="form-group <%= error_class(f, :password) %>">
+    <label for="password" class="control-label"> Password </label>
+    <%= password_input f, :password, class: "form-control" %>
+    <%= error_tag f, :password %>
+  </div>
+
+  <%= submit "Register", class: "btn" %>
+
+<% end %>
