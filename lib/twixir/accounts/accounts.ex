@@ -20,6 +20,13 @@ defmodule Twixir.Accounts do
     |> put_password_hash
   end
 
+  def login_changeset(%User{} = user, attrs \\ %{}) do
+    user
+    |> cast(attrs, [:email, :password])
+    |> validate_required([:email, :password])
+    |> put_password_hash
+  end
+
   def create_user(changeset) do
     Repo.insert(changeset)
   end
