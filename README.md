@@ -1,4 +1,4 @@
-# Twixer
+# Twixir
 
 Twitter implemented in Elixir
 
