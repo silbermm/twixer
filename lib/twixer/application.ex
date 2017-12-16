@@ -19,7 +19,11 @@ defmodule Twixer.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Twixer.Supervisor]
-    Supervisor.start_link(children, opts)
+    start_result = Supervisor.start_link(children, opts)
+
+    Ecto.Migrator.run(Twixer.Repo, "priv/repo/migrations", :up, all: true)
+
+    start_result
   end
 
   # Tell Phoenix to update the endpoint configuration
