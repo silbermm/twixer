@@ -1,4 +1,4 @@
-defmodule Twixer.Repo.Migrations.UpdateUsersUniqueEmail do
+defmodule Twixir.Repo.Migrations.UpdateUsersUniqueEmail do
   use Ecto.Migration
 
   def change do

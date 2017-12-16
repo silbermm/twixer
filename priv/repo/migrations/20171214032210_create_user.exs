@@ -1,4 +1,4 @@
-defmodule Twixer.Repo.Migrations.CreateUsers do
+defmodule Twixir.Repo.Migrations.CreateUsers do
   use Ecto.Migration
 
   def change do

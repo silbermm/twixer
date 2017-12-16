@@ -1,4 +1,4 @@
-defmodule Twixer.DataCase do
+defmodule Twixir.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -16,20 +16,20 @@ defmodule Twixer.DataCase do
 
   using do
     quote do
-      alias Twixer.Repo
+      alias Twixir.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Twixer.DataCase
+      import Twixir.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Twixer.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Twixir.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Twixer.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Twixir.Repo, {:shared, self()})
     end
 
     :ok

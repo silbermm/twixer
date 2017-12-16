@@ -1,4 +1,4 @@
-defmodule TwixerWeb.ChannelCase do
+defmodule TwixirWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -21,15 +21,15 @@ defmodule TwixerWeb.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint TwixerWeb.Endpoint
+      @endpoint TwixirWeb.Endpoint
     end
   end
 
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Twixer.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Twixir.Repo)
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Twixer.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Twixir.Repo, {:shared, self()})
     end
     :ok
   end

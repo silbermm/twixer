@@ -1,9 +1,9 @@
-defmodule Twixer.Mixfile do
+defmodule Twixir.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :twixer,
+      app: :twixir,
       version: "0.0.1",
       elixir: "~> 1.4",
       elixirc_paths: elixirc_paths(Mix.env),
@@ -17,7 +17,7 @@ defmodule Twixer.Mixfile do
 
   def application do
     [
-      mod: {Twixer.Application, []},
+      mod: {Twixir.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
