@@ -1,5 +1,7 @@
 # Twixir
 
+[![Build Status](https://semaphoreci.com/api/v1/silbermm/twixer/branches/master/badge.svg)](https://semaphoreci.com/silbermm/twixer)
+
 Twitter implemented in Elixir
 
 ## Running the project locally
