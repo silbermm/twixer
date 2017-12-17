@@ -3,7 +3,24 @@ defmodule TwixirWeb.UserController do
   alias Twixir.Accounts
   alias Twixir.Accounts.User
 
+  require IEx
+
+  action_fallback TwixirWeb.AuthFallbackController
   plug :scrub_params, "user" when action in [:create]
+
+  def login(conn, %{"user" => %{"email" => email, "password" => password}}) do
+    with {:ok, user} <- Accounts.login(email, password),
+         conn <- Accounts.Guardian.Plug.sign_in(conn, user) do
+      redirect(conn, to: page_path(conn, :index))
+     end
+  end
+  def login(conn, _params) do
+    {:error, :unauthorized}
+  end
+
+  def show_login(conn, _params) do
+    render conn, :login
+  end
 
   def register(conn, _params) do
     changeset = Accounts.user_changeset(%User{})

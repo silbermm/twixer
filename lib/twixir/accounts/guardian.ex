@@ -1,5 +1,6 @@
 defmodule Twixir.Accounts.Guardian do
   use Guardian, otp_app: :twixir
+  alias Twixir.Accounts
 
   def subject_for_token(resource, _claims) do
     {:ok, resource.id}

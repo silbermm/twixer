@@ -21,8 +21,10 @@ defmodule TwixirWeb.Router do
   scope "/", TwixirWeb do
     pipe_through :browser
 
-    get "/users/register", UserController, :register
-    post "/users/register", UserController, :create
+    get "/login", UserController, :show_login
+    post "/login", UserController, :login
+    get "/register", UserController, :register
+    post "/register", UserController, :create
 
     get "/", PageController, :index
   end

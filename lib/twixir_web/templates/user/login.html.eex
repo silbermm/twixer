@@ -1,0 +1,13 @@
+<%= form_for @conn, user_path(@conn, :login), [as: :user], fn f -> %>
+  <div class="form-group <%= error_class(f, :email) %>" >
+    <label class="control-label"> Email </label>
+    <%= text_input f, :email, class: "form-control" %>
+  </div>
+
+  <div class="form-group <%= error_class(f, :password) %>" >
+    <label class="control-label"> Password </label>
+    <%= password_input f, :password, class: "form-control" %>
+  </div>
+
+  <%= submit "Login", class: "btn" %>
+<% end %>
