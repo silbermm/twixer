@@ -7,6 +7,9 @@ defmodule Twixir.Accounts.Guardian do
   end
 
   def resource_from_claims(claims) do
-    {:ok, %{id: claims["sub"]}}
+    user =
+      claims["sub"]
+      |> Accounts.get_user
+    {:ok, user}
   end
 end

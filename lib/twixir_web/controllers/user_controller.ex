@@ -3,8 +3,6 @@ defmodule TwixirWeb.UserController do
   alias Twixir.Accounts
   alias Twixir.Accounts.User
 
-  require IEx
-
   action_fallback TwixirWeb.AuthFallbackController
   plug :scrub_params, "user" when action in [:create]
 
@@ -22,6 +20,12 @@ defmodule TwixirWeb.UserController do
     render conn, :login
   end
 
+  def logout(conn, _params) do
+    conn
+    |> Accounts.Guardian.Plug.sign_out
+    |> redirect(to: page_path(conn, :index))
+  end
+
   def register(conn, _params) do
     changeset = Accounts.user_changeset(%User{})
     render conn, changeset: changeset
@@ -33,7 +37,9 @@ defmodule TwixirWeb.UserController do
     |> Accounts.create_user()
     |> case do
       {:ok, user} ->
-        redirect conn, to: page_path(conn, :index)
+        conn
+        |> Accounts.Guardian.Plug.sign_in(user)
+        |> redirect(to: page_path(conn, :index))
       {:error, changeset} ->
         conn
         |> put_flash(:error, "Please correct the errors and resubmit")

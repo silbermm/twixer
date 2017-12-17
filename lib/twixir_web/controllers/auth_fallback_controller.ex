@@ -17,5 +17,4 @@ defmodule TwixirWeb.AuthFallbackController do
     |> render(:"login")
   end
 
-
 end

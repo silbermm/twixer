@@ -40,6 +40,7 @@ defmodule TwixirWeb do
       import TwixirWeb.Router.Helpers
       import TwixirWeb.ErrorHelpers
       import TwixirWeb.Gettext
+      import TwixirWeb.ViewHelper
     end
   end
 

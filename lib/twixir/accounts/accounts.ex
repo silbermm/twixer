@@ -37,6 +37,10 @@ defmodule Twixir.Accounts do
     Repo.insert(changeset)
   end
 
+  def get_user(id) do
+    Repo.get(User, id)
+  end
+
   def login(email, password) do
     user = Repo.get_by(User, email: email)
     cond do

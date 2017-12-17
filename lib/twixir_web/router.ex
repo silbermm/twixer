@@ -23,14 +23,10 @@ defmodule TwixirWeb.Router do
 
     get "/login", UserController, :show_login
     post "/login", UserController, :login
+    delete "/logout", UserController, :logout
     get "/register", UserController, :register
     post "/register", UserController, :create
 
     get "/", PageController, :index
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", TwixirWeb do
-  #   pipe_through :api
-  # end
 end
