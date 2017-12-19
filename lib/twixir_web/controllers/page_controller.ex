@@ -11,6 +11,10 @@ defmodule TwixirWeb.PageController do
 
   defp show_page(false, conn), do: render conn, "index.html"
   defp show_page(true, conn) do
-    render conn, "index.html"
+    tweets =
+      conn
+      |> ViewHelper.current_user
+      |> Stream.get_users_tweets
+    render conn, "tweets.html", tweets: tweets
   end
 end

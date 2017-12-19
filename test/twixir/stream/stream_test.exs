@@ -34,4 +34,20 @@ defmodule Twixir.StreamTest do
     assert {:error, changeset_errors} = Stream.create_tweet(tweet_changeset)
     assert %{content: ["can't be blank"]} = errors_on(changeset_errors)
   end
+
+  test "gets users tweets" do
+    user = Accounts.user_changeset(@valid_user)
+    {:ok, user} = Repo.insert(user)
+    tweet_changeset = Stream.tweet_changeset(%{@valid_tweet | user_id: user.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+    tweets = Stream.get_users_tweets(user)
+    assert tweets == [tweet]
+  end
+
+  test "no tweets for user" do
+    user = Accounts.user_changeset(@valid_user)
+    {:ok, user} = Repo.insert(user)
+    tweets = Stream.get_users_tweets(user)
+    assert tweets == []
+  end
 end

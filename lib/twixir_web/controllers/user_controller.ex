@@ -42,6 +42,7 @@ defmodule TwixirWeb.UserController do
         |> redirect(to: page_path(conn, :index))
       {:error, changeset} ->
         conn
+        |> put_status(500)
         |> put_flash(:error, "Please correct the errors and resubmit")
         |> render("register.html", changeset: changeset)
     end

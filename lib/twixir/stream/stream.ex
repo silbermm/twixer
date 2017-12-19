@@ -1,11 +1,18 @@
 defmodule Twixir.Stream do
   import Ecto.Changeset
+  import Ecto.Query
   alias Twixir.Repo
   alias Twixir.Accounts
   alias Twixir.Stream.Tweet
 
   def create_tweet(tweet_changeset) do
     Repo.insert(tweet_changeset)
+  end
+
+  def get_users_tweets(user) do
+    Repo.all from t in Tweet,
+      join: u in  assoc(t, :user),
+      where: u.id == ^user.id
   end
 
   def tweet_changeset(%Tweet{} = tweet, attrs \\ %{}) do
