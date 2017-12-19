@@ -17,4 +17,7 @@ defmodule TwixirWeb.AuthFallbackController do
     |> render(:"login")
   end
 
+  def auth_error(conn, {type, _reason}, _opts) do
+    call(conn, {:error, :unauthorized})
+  end
 end

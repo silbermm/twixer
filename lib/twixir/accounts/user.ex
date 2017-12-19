@@ -1,8 +1,6 @@
 defmodule Twixir.Accounts.User do
   use Ecto.Schema
-  import Ecto.Changeset
-  alias Twixir.Accounts.User
-
+  alias Twixir.Stream.Tweet
 
   schema "users" do
     field :email, :string
@@ -10,6 +8,8 @@ defmodule Twixir.Accounts.User do
     field :last_name, :string
     field :password_hash, :string
     field :password, :string, virtual: true
+
+    has_many :tweets, Tweet
 
     timestamps()
   end

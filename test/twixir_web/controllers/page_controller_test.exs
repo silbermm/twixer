@@ -3,6 +3,7 @@ defmodule TwixirWeb.PageControllerTest do
   alias Twixir.Repo
   alias Twixir.Accounts.User
   alias Twixir.Accounts
+  alias Twixir.Stream.Tweet
 
   @valid_attributes %{
     email: "silbermm@gmail.com",
@@ -30,4 +31,17 @@ defmodule TwixirWeb.PageControllerTest do
     conn = get conn, "/"
     assert html_response(conn, 200) =~ "Sign in"
   end
+
+  #test "shows my tweets when logged in" do
+    #register = Accounts.registration_changeset(%User{}, @valid_attributes)
+    #{:ok, user} = Repo.insert(register)
+    #{:ok, tweet} = Repo.insert(%Tweet{content: "Tweet1", user_id: user.id})
+    #conn =
+      #conn
+      #|> Accounts.Guardian.Plug.sign_in(user)
+      #|> get("/")
+    #assert html_response(conn, 200) =~ "Welcome Matt!"
+    #assert html_response(conn, 200) =~ "Tweet1"
+  #end
+
 end

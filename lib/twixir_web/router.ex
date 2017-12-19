@@ -6,7 +6,7 @@ defmodule TwixirWeb.Router do
     plug :fetch_session
     plug Guardian.Plug.Pipeline,
       module: Twixir.Accounts.Guardian,
-      error_handler: TwixirWeb.AuthErrorHandler
+      error_handler: TwixirWeb.AuthFallbackController
     plug Guardian.Plug.VerifySession
     plug Guardian.Plug.LoadResource, allow_blank: true
     plug :fetch_flash
@@ -21,11 +21,14 @@ defmodule TwixirWeb.Router do
   scope "/", TwixirWeb do
     pipe_through :browser
 
-    get "/login", UserController, :show_login
-    post "/login", UserController, :login
-    delete "/logout", UserController, :logout
-    get "/register", UserController, :register
-    post "/register", UserController, :create
+    get    "/login",    UserController, :show_login
+    post   "/login",    UserController, :login
+    delete "/logout",   UserController, :logout
+    get    "/register", UserController, :register
+    post   "/register", UserController, :create
+
+    get  "/tweet", TweetController, :index
+    post "/tweet", TweetController, :create
 
     get "/", PageController, :index
   end
