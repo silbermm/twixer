@@ -1,0 +1,3 @@
+<div>
+  <h3> Sorry, we can't find <%= @email %> </h3>
+</div>

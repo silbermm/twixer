@@ -7,7 +7,7 @@ defmodule TwixirWeb.PageController do
   def show_user(conn, %{"user_id" => email} = _params) do
     with user_details <- Accounts.get_user_by_email(email),
          user_tweets  <- Stream.get_tweets(email) do
-      show_user_page(conn, user_details, user_tweets)
+      show_user_page(conn, email, user_details, user_tweets)
     end
   end
 
@@ -17,10 +17,12 @@ defmodule TwixirWeb.PageController do
     |> show_page(conn)
   end
 
-  defp show_user_page(conn, nil, _) do
-    render conn, "no_user.html"
+  defp show_user_page(conn, email, nil, _) do
+    conn
+    |> put_status(401)
+    |> render "no_user.html", email: email
   end
-  defp show_user_page(conn, user_details, user_tweets) do
+  defp show_user_page(conn, _email, user_details, user_tweets) do
     render conn, "user.html", user: user_details, tweets: user_tweets
   end
 

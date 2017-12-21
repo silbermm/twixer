@@ -98,6 +98,13 @@ defmodule Twixir.AccountsTest do
 
     [u] = Accounts.list_followers(followee)
     assert u.password_hash == nil
+  end
 
+  test "get a user by email" do
+    user = Accounts.registration_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Accounts.create_user(user)
+    found = Accounts.get_user_by_email(user.email)
+    assert found.id == user.id
+    assert found.password_hash == nil
   end
 end

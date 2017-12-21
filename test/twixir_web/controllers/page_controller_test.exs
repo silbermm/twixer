@@ -44,4 +44,17 @@ defmodule TwixirWeb.PageControllerTest do
     assert html_response(conn, 200) =~ "Tweet1"
   end
 
+  test "shows a users twitter page", %{conn: conn} do
+    register = Accounts.registration_changeset(%User{}, @valid_attributes)
+    {:ok, user} = Repo.insert(register)
+    {:ok, tweet} = Repo.insert(%Tweet{content: "Tweet1", user_id: user.id})
+    conn = get conn, "/#{user.email}"
+    assert html_response(conn, 200) =~ "Tweet1"
+    assert html_response(conn, 200) =~ user.email
+  end
+
+  test "shows a not found page for non-existent user", %{conn: conn} do
+    conn = get conn, "/someone@noexist.com"
+    assert html_response(conn, 401) =~ "Sorry, we can't find someone@noexist.com"
+  end
 end

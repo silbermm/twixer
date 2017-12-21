@@ -53,4 +53,12 @@ defmodule Twixir.StreamTest do
     assert tweets == []
   end
 
+  test "get tweets for email" do
+    user = Accounts.user_changeset(@valid_user)
+    {:ok, user} = Repo.insert(user)
+    tweet_changeset = Stream.tweet_changeset(%{@valid_tweet | user_id: user.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+    [tweets] = Stream.get_tweets(user.email)
+    assert tweet = tweets
   end
+end
