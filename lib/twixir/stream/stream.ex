@@ -15,6 +15,12 @@ defmodule Twixir.Stream do
       where: u.id == ^user.id
   end
 
+  def get_tweets(email) do
+    Repo.all from t in Tweet, 
+      join: u in assoc(t, :user),
+      where: u.email == ^email
+  end
+
   def tweet_changeset(%Tweet{} = tweet, attrs \\ %{}) do
     tweet
     |> cast(attrs, [:content, :user_id])

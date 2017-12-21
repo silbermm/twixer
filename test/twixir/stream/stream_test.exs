@@ -53,4 +53,4 @@ defmodule Twixir.StreamTest do
     assert tweets == []
   end
 
-end
+  end

@@ -50,8 +50,54 @@ defmodule Twixir.AccountsTest do
     {:ok, user} = Repo.insert(user)
     followee = Accounts.user_changeset(%User{}, @valid_followee)
     {:ok, followee} = Repo.insert(followee)
-    Accounts.follow_user(user, followee.id)
-    [first_followee] = Repo.all(from(u in User, where: u.id == ^user.id, preload: :followees))
-    assert first_followee.id == followee.id
+
+    {:ok, result} = Accounts.follow_user(user, followee)
+    assert Enum.count(result.followees) == 1
+    assert List.first(result.followees).id == followee.id
+  end
+
+  test "list users that I follow" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+    {:ok, _result} = Accounts.follow_user(user, followee)
+
+    [f] = Accounts.list_followees(user)
+    assert followee.id == f.id 
+  end
+
+  test "list followers" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+    {:ok, _result} = Accounts.follow_user(user, followee)
+
+    [u] = Accounts.list_followers(followee)
+    assert user.id == u.id
+  end
+
+  test "don't return the password_hash for followees" do
+    user = Accounts.registration_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Accounts.create_user(user)
+    followee = Accounts.registration_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Accounts.create_user(followee)
+    {:ok, _result} = Accounts.follow_user(user, followee)
+
+    [f] = Accounts.list_followees(user)
+    assert f.password_hash == nil
+  end
+
+  test "don't return the password_hash for followers" do
+    user = Accounts.registration_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Accounts.create_user(user)
+    followee = Accounts.registration_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Accounts.create_user(followee)
+    {:ok, _result} = Accounts.follow_user(user, followee)
+
+    [u] = Accounts.list_followers(followee)
+    assert u.password_hash == nil
+
   end
 end

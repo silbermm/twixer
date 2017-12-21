@@ -1,5 +1,6 @@
 defmodule Twixir.Accounts do
   import Ecto.Changeset
+  import Ecto.Query
   alias Twixir.Repo
   alias Twixir.Accounts.User
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
@@ -19,6 +20,7 @@ defmodule Twixir.Accounts do
     |> cast(attrs, [:password], [])
     |> validate_required([:password])
     |> validate_length(:password, min: 6)
+    |> unique_constraint(:email)
     |> put_password_hash
   end
 
@@ -42,6 +44,13 @@ defmodule Twixir.Accounts do
   """
   def get_user(id) do
     Repo.get(User, id)
+  end
+
+  def get_user_by_email(email) do
+    query = safe_user_query
+    from(u in query, where: u.email == ^email)
+    |> Repo.one
+    |> Repo.preload([followees:  query])
   end
 
   @doc """
@@ -70,6 +79,32 @@ defmodule Twixir.Accounts do
       |> Ecto.Changeset.change
       |> Ecto.Changeset.put_assoc(:followees, [followee])
     Repo.update(changeset)
+  end
+
+  @doc """
+  List people that I follow
+
+  Takes the currently logged in user
+  """
+  def list_followees(user) do
+    query = safe_user_query
+    user =  Repo.preload user, [followees:  query]
+    user.followees
+  end
+
+  @doc """
+  List people that I follow
+
+  Takes the currently logged in user
+  """
+  def list_followers(user) do
+    query = safe_user_query
+    user = Repo.preload user, [followers: query]
+    user.followers
+  end
+
+  defp safe_user_query() do
+    from f in User, select: %User{id: f.id, email: f.email, first_name: f.first_name, last_name: f.last_name}
   end
 
   defp put_password_hash(changeset) do

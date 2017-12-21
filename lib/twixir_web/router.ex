@@ -30,6 +30,7 @@ defmodule TwixirWeb.Router do
     get  "/tweet", TweetController, :index
     post "/tweet", TweetController, :create
 
-    get "/", PageController, :index
+    get "/:user_id", PageController, :show_user
+    get "/",      PageController, :index
   end
 end

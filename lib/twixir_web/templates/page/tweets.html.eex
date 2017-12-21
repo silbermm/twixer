@@ -1,5 +1,1 @@
-<div>
-  <%= for t <- @tweets do %>
-    <p> <%= t.content %> </p>
-  <% end %>
-</div>
+<%= render TwixirWeb.SharedView, "tweet.html", assigns %>
