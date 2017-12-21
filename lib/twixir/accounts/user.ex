@@ -11,6 +11,8 @@ defmodule Twixir.Accounts.User do
 
     has_many :tweets, Tweet
 
+    many_to_many :followees, __MODULE__, join_through: "follows", join_keys: [followee_id: :id, follower_id: :id]
+    many_to_many :followers, __MODULE__, join_through: "follows", join_keys: [follower_id: :id, followee_id: :id]
     timestamps()
   end
 end

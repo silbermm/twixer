@@ -37,10 +37,16 @@ defmodule Twixir.Accounts do
     Repo.insert(changeset)
   end
 
+  @doc """
+  Retrieve a user by id
+  """
   def get_user(id) do
     Repo.get(User, id)
   end
 
+  @doc """
+  Login to the system
+  """
   def login(email, password) do
     user = Repo.get_by(User, email: email)
     cond do
@@ -52,6 +58,18 @@ defmodule Twixir.Accounts do
         dummy_checkpw()
         {:error, :not_found}
     end
+  end
+
+  @doc """
+  Follow a user
+  """
+  def follow_user(user, followee) do
+    user = Repo.preload user, :followees
+    changeset =
+      user
+      |> Ecto.Changeset.change
+      |> Ecto.Changeset.put_assoc(:followees, [followee])
+    Repo.update(changeset)
   end
 
   defp put_password_hash(changeset) do

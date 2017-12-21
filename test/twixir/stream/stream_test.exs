@@ -8,6 +8,8 @@ defmodule Twixir.StreamTest do
 
   @valid_user %User{email: "silbermm@gmail.com", first_name: "matt", last_name: "silb", password: "password"}
 
+  @valid_follower %User{email: "friend@gmail.com", first_name: "Friend", last_name: "Friender", password: "password"}
+
   @valid_tweet %Tweet{content: "my first tweet"}
 
   test "create tweet" do
@@ -50,4 +52,5 @@ defmodule Twixir.StreamTest do
     tweets = Stream.get_users_tweets(user)
     assert tweets == []
   end
+
 end

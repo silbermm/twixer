@@ -6,6 +6,7 @@ defmodule Twixir.AccountsTest do
   alias Twixir.Repo
 
   @valid_attrs %{email: "silbermm@gmail.com", first_name: "Matt", last_name: "Sil", password: "p@ssw0rd"}
+  @valid_followee %{email: "friend@gmail.com", first_name: "Friend", last_name: "Friender", password: "password"}
 
   test "changeset with valid attributes" do
     changeset = Accounts.user_changeset(%User{}, @valid_attrs)
@@ -42,5 +43,15 @@ defmodule Twixir.AccountsTest do
     Accounts.create_user(register)
     {:error, reason} = Accounts.login(@valid_attrs.email, "badpassword")
     assert reason == :unauthorized
+  end
+
+  test "follow a user" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+    Accounts.follow_user(user, followee.id)
+    [first_followee] = Repo.all(from(u in User, where: u.id == ^user.id, preload: :followees))
+    assert first_followee.id == followee.id
   end
 end
