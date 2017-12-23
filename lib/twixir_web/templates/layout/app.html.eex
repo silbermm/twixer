@@ -9,6 +9,7 @@
 
     <title>Twixir</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <script src="https://use.fontawesome.com/5da0b6d2eb.js"></script>
   </head>
 
   <body>
