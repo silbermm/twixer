@@ -3,6 +3,7 @@ defmodule Twixir.Accounts do
   import Ecto.Query
   alias Twixir.Repo
   alias Twixir.Accounts.User
+  alias Twixir.Stream.Follows
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
   @doc false
@@ -72,19 +73,25 @@ defmodule Twixir.Accounts do
   @doc """
   Follow a user
   """
+  def follow_user(user, followee) when is_integer(user) and is_integer(followee) do 
+    changeset =
+      %Follows{}
+      |> cast(%{follower_id: user, followee_id: followee}, [:follower_id, :followee_id])
+      |> unique_constraint(:followees, name: :follows_follower_id_followee_id_index, message: "Already following user.")
+    Repo.insert(changeset)
+  end
   def follow_user(user, followee) do
     user = Repo.preload user, :followees
     changeset =
       user
-      |> Ecto.Changeset.change
-      |> Ecto.Changeset.put_assoc(:followees, [followee])
+      |> change
+      |> put_assoc(:followees, [followee])
+      |> unique_constraint(:followees, name: :follows_follower_id_followee_id_index, message: "Already following user.")
     Repo.update(changeset)
   end
 
   @doc """
   List people that I follow
-
-  Takes the currently logged in user
   """
   def list_followees(user) do
     query = safe_user_query

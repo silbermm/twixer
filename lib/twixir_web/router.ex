@@ -6,7 +6,7 @@ defmodule TwixirWeb.Router do
     plug :fetch_session
     plug Guardian.Plug.Pipeline,
       module: Twixir.Accounts.Guardian,
-      error_handler: TwixirWeb.AuthFallbackController
+      error_handler: TwixirWeb.FallbackController
     plug Guardian.Plug.VerifySession
     plug Guardian.Plug.LoadResource, allow_blank: true
     plug :fetch_flash
@@ -32,7 +32,8 @@ defmodule TwixirWeb.Router do
 
     get "/explore", ExploreController, :index
 
-    get "/:user_id", PageController, :show_user
-    get "/",      PageController, :index
+    get "/:user_id",        PageController, :show_user
+    get "/follow/:user_id", PageController, :follow
+    get "/",                PageController, :index
   end
 end

@@ -4,6 +4,8 @@ defmodule TwixirWeb.PageController do
   alias Twixir.Accounts
   alias TwixirWeb.ViewHelper
 
+  action_fallback TwixirWeb.FallbackController
+
   def show_user(conn, %{"user_id" => email} = _params) do
     with user_details <- Accounts.get_user_by_email(email),
          user_tweets  <- Stream.get_tweets(email) do
@@ -15,6 +17,16 @@ defmodule TwixirWeb.PageController do
     conn
     |> ViewHelper.logged_in?
     |> show_page(conn)
+  end
+
+  def follow(conn, %{"user_id" => email} = params) do
+    current_user = ViewHelper.current_user(conn)
+    with followee <- Accounts.get_user_by_email(email),
+         {:ok, _res} <- Accounts.follow_user(current_user.id, followee.id),
+         user_tweets  <- Stream.get_tweets(email) do
+         redirect(conn, to: page_path(conn, :show_user, email),
+                        user: followee, tweets: user_tweets)
+    end
   end
 
   defp show_user_page(conn, email, nil, _) do
@@ -34,4 +46,5 @@ defmodule TwixirWeb.PageController do
       |> Stream.get_users_tweets
     render conn, "tweets.html", tweets: tweets
   end
+
 end

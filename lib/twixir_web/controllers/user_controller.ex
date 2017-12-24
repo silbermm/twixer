@@ -3,7 +3,7 @@ defmodule TwixirWeb.UserController do
   alias Twixir.Accounts
   alias Twixir.Accounts.User
 
-  action_fallback TwixirWeb.AuthFallbackController
+  action_fallback TwixirWeb.FallbackController
   plug :scrub_params, "user" when action in [:create]
 
   def login(conn, %{"user" => %{"email" => email, "password" => password}}) do
