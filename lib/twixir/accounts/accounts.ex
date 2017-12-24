@@ -1,4 +1,7 @@
 defmodule Twixir.Accounts do
+  @moduledoc """
+  Bounded Context for all account related tasks
+  """
   import Ecto.Changeset
   import Ecto.Query
   alias Twixir.Repo
@@ -48,10 +51,11 @@ defmodule Twixir.Accounts do
   end
 
   def get_user_by_email(email) do
-    query = safe_user_query
-    from(u in query, where: u.email == ^email)
+    query = safe_user_query()
+    query
+    |> where([u], u.email == ^email)
     |> Repo.one
-    |> Repo.preload([followees:  query])
+    |> Repo.preload([followees: query])
   end
 
   @doc """
@@ -94,7 +98,7 @@ defmodule Twixir.Accounts do
   List people that I follow
   """
   def list_followees(user) do
-    query = safe_user_query
+    query = safe_user_query()
     user =  Repo.preload user, [followees:  query]
     user.followees
   end
@@ -105,7 +109,7 @@ defmodule Twixir.Accounts do
   Takes the currently logged in user
   """
   def list_followers(user) do
-    query = safe_user_query
+    query = safe_user_query()
     user = Repo.preload user, [followers: query]
     user.followers
   end

@@ -1,4 +1,6 @@
 defmodule Twixir.Accounts.Guardian do
+  @moduledoc false
+
   use Guardian, otp_app: :twixir
   alias Twixir.Accounts
 

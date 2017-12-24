@@ -3,7 +3,6 @@ defmodule TwixirWeb.TweetControllerTest do
   alias Twixir.Repo
   alias Twixir.Accounts.User
   alias Twixir.Accounts
-  alias Twixir.Stream.Tweet
 
   @valid_user %{
     email: "silbermm@gmail.com",

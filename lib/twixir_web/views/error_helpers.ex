@@ -9,7 +9,7 @@ defmodule TwixirWeb.ErrorHelpers do
   returns the error class if the field is in an error state
   """
   def error_class(form, field) do
-    if (form.errors[field]) do
+    if form.errors[field] do
       "has-error"
     else
       ""

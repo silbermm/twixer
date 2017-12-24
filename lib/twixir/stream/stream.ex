@@ -1,8 +1,9 @@
 defmodule Twixir.Stream do
+  @moduledoc false
+
   import Ecto.Changeset
   import Ecto.Query
   alias Twixir.Repo
-  alias Twixir.Accounts
   alias Twixir.Stream.Tweet
 
   def create_tweet(tweet_changeset) do

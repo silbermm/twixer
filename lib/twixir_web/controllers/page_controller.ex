@@ -19,7 +19,7 @@ defmodule TwixirWeb.PageController do
     |> show_page(conn)
   end
 
-  def follow(conn, %{"user_id" => email} = params) do
+  def follow(conn, %{"user_id" => email} = _params) do
     current_user = ViewHelper.current_user(conn)
     with followee <- Accounts.get_user_by_email(email),
          {:ok, _res} <- Accounts.follow_user(current_user.id, followee.id),
@@ -32,7 +32,7 @@ defmodule TwixirWeb.PageController do
   defp show_user_page(conn, email, nil, _) do
     conn
     |> put_status(401)
-    |> render "no_user.html", email: email
+    |> render("no_user.html", email: email)
   end
   defp show_user_page(conn, _email, user_details, user_tweets) do
     render conn, "user.html", user: user_details, tweets: user_tweets

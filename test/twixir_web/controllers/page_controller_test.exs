@@ -42,7 +42,7 @@ defmodule TwixirWeb.PageControllerTest do
   test "shows my tweets when logged in", %{conn: conn} do
     register = Accounts.registration_changeset(%User{}, @valid_attributes)
     {:ok, user} = Repo.insert(register)
-    {:ok, tweet} = Repo.insert(%Tweet{content: "Tweet1", user_id: user.id})
+    {:ok, _tweet} = Repo.insert(%Tweet{content: "Tweet1", user_id: user.id})
     conn =
       conn
       |> Accounts.Guardian.Plug.sign_in(user)
@@ -54,7 +54,7 @@ defmodule TwixirWeb.PageControllerTest do
   test "shows a users twitter page", %{conn: conn} do
     register = Accounts.registration_changeset(%User{}, @valid_attributes)
     {:ok, user} = Repo.insert(register)
-    {:ok, tweet} = Repo.insert(%Tweet{content: "Tweet1", user_id: user.id})
+    {:ok, _tweet} = Repo.insert(%Tweet{content: "Tweet1", user_id: user.id})
     conn = get conn, "/#{user.email}"
     assert html_response(conn, 200) =~ "Tweet1"
     assert html_response(conn, 200) =~ user.email

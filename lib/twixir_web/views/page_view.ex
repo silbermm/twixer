@@ -14,7 +14,7 @@ defmodule TwixirWeb.PageView do
       ""
     end
   end
-  def follows_text(conn, tweeter), do: ""
+  def follows_text(_conn, _tweeter), do: ""
 
   def follow_button(conn, user) do
     current_user = ViewHelper.current_user(conn)

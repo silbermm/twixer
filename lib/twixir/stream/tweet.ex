@@ -1,4 +1,6 @@
 defmodule Twixir.Stream.Tweet do
+  @moduledoc false
+
   use Ecto.Schema
   alias Twixir.Accounts.User
 

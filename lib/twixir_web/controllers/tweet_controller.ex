@@ -19,12 +19,11 @@ defmodule TwixirWeb.TweetController do
     changeset
     |> Stream.create_tweet()
     |> case do
-      {:ok, tweet} ->
+      {:ok, _tweet} ->
         conn
         |> put_flash(:info, "Tweeted!")
         |> redirect(to: page_path(conn, :index))
       {:error, changeset} ->
-        IO.inspect changeset
         conn
         |> put_status(500)
         |> put_flash(:error, "Unable to tweet")

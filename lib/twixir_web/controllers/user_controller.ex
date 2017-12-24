@@ -12,7 +12,7 @@ defmodule TwixirWeb.UserController do
       redirect(conn, to: page_path(conn, :index))
      end
   end
-  def login(conn, _params) do
+  def login(_conn, _params) do
     {:error, :unauthorized}
   end
 
