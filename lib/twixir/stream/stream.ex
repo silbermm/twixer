@@ -22,6 +22,12 @@ defmodule Twixir.Stream do
       where: u.email == ^email
   end
 
+  def get_public_tweets() do
+    Repo.all from t in Tweet,
+      order_by: [desc: t.inserted_at],
+      preload: [:user]
+  end
+
   def tweet_changeset(%Tweet{} = tweet, attrs \\ %{}) do
     tweet
     |> cast(attrs, [:content, :user_id])

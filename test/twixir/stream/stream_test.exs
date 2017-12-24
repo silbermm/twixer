@@ -9,6 +9,7 @@ defmodule Twixir.StreamTest do
   @valid_user %User{email: "silbermm@gmail.com", first_name: "matt", last_name: "silb", password: "password"}
 
   @valid_tweet %Tweet{content: "my first tweet"}
+  @valid_tweet2 %Tweet{content: "my second tweet"}
 
   test "create tweet" do
     user = Accounts.user_changeset(@valid_user)
@@ -58,5 +59,17 @@ defmodule Twixir.StreamTest do
     {:ok, tweet} = Stream.create_tweet(tweet_changeset)
     [tweets] = Stream.get_tweets(user.email)
     assert tweet == tweets
+  end
+
+  test "get public timeline tweets" do
+    user = Accounts.user_changeset(@valid_user)
+    {:ok, user} = Repo.insert(user)
+    tweet_changeset = Stream.tweet_changeset(%{@valid_tweet | user_id: user.id})
+    tweet2_changeset = Stream.tweet_changeset(%{@valid_tweet2 | user_id: user.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+    {:ok, tweet2} = Stream.create_tweet(tweet2_changeset)
+    [first|[second|[]]] = Stream.get_public_tweets()
+    assert first.content == tweet2.content
+    assert second.content == tweet.content
   end
 end

@@ -9,4 +9,8 @@ defmodule TwixirWeb.ExploreControllerTest do
     conn = get conn, "/explore"
     assert html_response(conn, 200) =~ "Find People"
   end
+
+  test "gets public timeline", %{conn: conn} do
+    
+  end
 end
