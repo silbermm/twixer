@@ -1,15 +1,6 @@
 <div class="row">
   <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <img src="http://via.placeholder.com/200x200" alt="...">
-      <div class="caption">
-        <h4> <%= @user.email %> </h4>
-        <p> <small> <%= follows_text(@conn, @user) %> </small> </p>
-        <p>
-          <%= follow_button(@conn, @user) %>
-        </p>
-      </div>
-    </div>
+    <%= render TwixirWeb.SharedView, "profile.html.eex", assigns %>
   </div>
   <div class="col-md-8">
     <%= render TwixirWeb.SharedView, "tweets.html", assigns %>

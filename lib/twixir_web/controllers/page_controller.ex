@@ -42,11 +42,10 @@ defmodule TwixirWeb.PageController do
   defp show_page(false, conn), do: render conn, "index.html"
   defp show_page(true, conn) do
     changeset = Stream.tweet_changeset(%Tweet{})
-    tweets =
-      conn
-      |> ViewHelper.current_user
-      |> Stream.get_users_tweets
-    render conn, "tweets.html", tweets: tweets, changeset: changeset
+    current_user = ViewHelper.current_user(conn)
+    user = Accounts.get_user_by_email(current_user.email)
+    tweets = Stream.get_users_tweets(current_user)
+    render conn, "tweets.html", tweets: tweets, changeset: changeset, user: user
   end
 
 end
