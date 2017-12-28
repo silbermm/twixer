@@ -55,7 +55,7 @@ defmodule Twixir.Accounts do
     query
     |> where([u], u.email == ^email)
     |> Repo.one
-    |> Repo.preload([followees: query])
+    |> Repo.preload([followees: query, followers: query])
   end
 
   @doc """

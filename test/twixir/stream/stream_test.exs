@@ -7,9 +7,11 @@ defmodule Twixir.StreamTest do
   alias Twixir.Stream.Tweet
 
   @valid_user %User{email: "silbermm@gmail.com", first_name: "matt", last_name: "silb", password: "password"}
-
+  @valid_attrs %{email: "silbermm@gmail.com", first_name: "Matt", last_name: "Sil", password: "p@ssw0rd"}
+  @valid_followee %{email: "friend@gmail.com", first_name: "Friend", last_name: "Friender", password: "password"}
   @valid_tweet %Tweet{content: "my first tweet"}
   @valid_tweet2 %Tweet{content: "my second tweet"}
+  @valid_followee_tweet %Tweet{content: "follow me"}
 
   test "create tweet" do
     user = Accounts.user_changeset(@valid_user)
@@ -73,4 +75,17 @@ defmodule Twixir.StreamTest do
     assert second.content == tweet.content
   end
 
+  test "get followees tweets" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+    {:ok, result} = Accounts.follow_user(user, followee)
+
+    tweet_changeset = Stream.tweet_changeset(%{@valid_followee_tweet | user_id: followee.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+
+    [retrieved_tweet] = Stream.get_followees_tweets(user)
+    assert @valid_followee_tweet.content == retrieved_tweet.content
+  end
 end

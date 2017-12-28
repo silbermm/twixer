@@ -16,13 +16,13 @@ defmodule TwixirWeb.PageView do
   end
   def follows_text(_conn, _tweeter), do: ""
 
-  def follow_button(conn, user) do
+  def follow_button(conn, tweeter) do
     current_user = ViewHelper.current_user(conn)
     if logged_in? conn do
-      case Enum.find(user.followees, fn(f) -> f.id == current_user.id end) do
+      case Enum.find(tweeter.followers, &(&1.id == current_user.id)) do
         nil ->
           link "Follow",
-            to: page_path(conn, :follow, user.email),
+            to: page_path(conn, :follow, tweeter.email),
             class: "btn btn-primary"
         _   ->
           link "Following", to: "", 

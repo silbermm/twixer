@@ -17,7 +17,8 @@ defmodule TwixirWeb.FallbackController do
     |> put_view(UserView)
     |> render(:"login")
   end
-  def call(conn, _params) do
+  def call(conn, params) do
+    IO.inspect params
     conn
     |> put_status(500)
     |> put_flash(:error, "Something when wrong!")

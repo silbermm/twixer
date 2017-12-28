@@ -23,7 +23,7 @@ defmodule TwixirWeb.PageController do
   def follow(conn, %{"user_id" => email} = _params) do
     current_user = ViewHelper.current_user(conn)
     with followee <- Accounts.get_user_by_email(email),
-         {:ok, _res} <- Accounts.follow_user(current_user.id, followee.id),
+         {:ok, _res} <- Accounts.follow_user(followee.id, current_user.id),
          user_tweets  <- Stream.get_tweets(email) do
          redirect(conn, to: page_path(conn, :show_user, email),
                         user: followee, tweets: user_tweets)
