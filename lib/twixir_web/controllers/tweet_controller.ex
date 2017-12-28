@@ -21,7 +21,6 @@ defmodule TwixirWeb.TweetController do
     |> case do
       {:ok, _tweet} ->
         conn
-        |> put_flash(:info, "Tweeted!")
         |> redirect(to: page_path(conn, :index))
       {:error, changeset} ->
         conn

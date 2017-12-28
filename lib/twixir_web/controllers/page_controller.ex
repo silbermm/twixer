@@ -1,6 +1,7 @@
 defmodule TwixirWeb.PageController do
   use TwixirWeb, :controller
   alias Twixir.Stream
+  alias Twixir.Stream.Tweet
   alias Twixir.Accounts
   alias TwixirWeb.ViewHelper
 
@@ -40,11 +41,12 @@ defmodule TwixirWeb.PageController do
 
   defp show_page(false, conn), do: render conn, "index.html"
   defp show_page(true, conn) do
+    changeset = Stream.tweet_changeset(%Tweet{})
     tweets =
       conn
       |> ViewHelper.current_user
       |> Stream.get_users_tweets
-    render conn, "tweets.html", tweets: tweets
+    render conn, "tweets.html", tweets: tweets, changeset: changeset
   end
 
 end

@@ -35,6 +35,5 @@ defmodule TwixirWeb.TweetControllerTest do
       |> Accounts.Guardian.Plug.sign_in(user)
       |> post("/tweet", tweet: %{"content" => "my very first tweet"})
     assert html_response(conn, 302)
-    assert get_flash(conn, :info) == "Tweeted!"
   end
 end

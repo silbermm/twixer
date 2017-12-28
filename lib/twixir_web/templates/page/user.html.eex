@@ -12,6 +12,6 @@
     </div>
   </div>
   <div class="col-md-8">
-    <%= render TwixirWeb.SharedView, "tweet.html", assigns %>
+    <%= render TwixirWeb.SharedView, "tweets.html", assigns %>
   <div>
 </div>

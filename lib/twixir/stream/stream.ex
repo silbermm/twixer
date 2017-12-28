@@ -13,13 +13,15 @@ defmodule Twixir.Stream do
   def get_users_tweets(user) do
     Repo.all from t in Tweet,
       join: u in  assoc(t, :user),
-      where: u.id == ^user.id
+      where: u.id == ^user.id,
+      preload: [:user]
   end
 
   def get_tweets(email) do
     Repo.all from t in Tweet, 
       join: u in assoc(t, :user),
-      where: u.email == ^email
+      where: u.email == ^email,
+      preload: [:user]
   end
 
   def get_public_tweets() do
