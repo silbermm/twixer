@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-6 col-md-4">
-    <%= render TwixirWeb.SharedView, "profile.html.eex", assigns %>
+    <%= render TwixirWeb.SharedView, "profile.html", assigns %>
   </div>
   <div class="col-md-8">
     <%= render TwixirWeb.SharedView, "tweets.html", assigns %>
