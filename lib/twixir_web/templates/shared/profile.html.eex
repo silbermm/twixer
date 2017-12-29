@@ -1,11 +1,62 @@
-<div class="thumbnail">
-  <img src="http://via.placeholder.com/200x200" alt="...">
-  <div class="caption">
-    <pre> hello </pre>
-    <h4> <%= @user.email %> </h4>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <img src="http://via.placeholder.com/150x150" alt="...">
+    <h5> <%= @user.first_name %> <%= @user.last_name %> </h5>
+    <h6> <%= @user.email %> </h6>
     <p> <small> <%= follows_text(@conn, @user) %> </small> </p>
-    <p>
-      <%= follow_button(@conn, @user) %>
-    </p>
+    <p> <%= follow_button(@conn, @user) %> </p>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+    <div class="col-md-4">
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-primary"> Following </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-center">
+            <span class="label label-info">
+              <%= Enum.count(@user.followees) %>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-primary"> Followers </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-center"> 
+            <span class="label label-info">
+              <%= Enum.count(@user.followees) %> 
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-primary"> Tweets </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-center">
+            <span class="label label-info">
+              <%= Enum.count(@tweets) %>
+            </span>
+          <p>
+        </div>
+      </div>
+    </div>
+    </div>
   </div>
 </div>

@@ -27,20 +27,27 @@ defmodule TwixirWeb.SharedView do
   def follows_text(_conn, _tweeter), do: ""
 
   def follow_button(conn, tweeter) do
-    current_user = ViewHelper.current_user(conn)
-    if logged_in? conn do
-      case Enum.find(tweeter.followers, &(&1.id == current_user.id)) do
-        nil ->
-          link "Follow",
-            to: page_path(conn, :follow, tweeter.email),
-            class: "btn btn-primary"
-        _   ->
-          link "Following", to: "", 
-            class: "btn btn-primary disabled"
-      end
+    with true <- logged_in?(conn),
+         current_user <- ViewHelper.current_user(conn),
+         false <- current_user.id == tweeter.id do
+      show_correct_button(tweeter, current_user, conn)
     else
-      link "Sign in to follow", to: user_path(conn, :login), class: "btn btn-primary"
+      false ->
+        link "Sign in to follow", to: user_path(conn, :login), class: "btn btn-primary btn-block"
+      _ -> ""
     end
+  end
+
+  defp show_correct_button(tweeter, current_user, conn) do
+    case Enum.find(tweeter.followers, &(&1.id == current_user.id)) do
+      nil ->
+        link "Follow",
+          to: page_path(conn, :follow, tweeter.email),
+          class: "btn btn-primary btn-block"
+      _   ->
+        link "Following", to: "", 
+          class: "btn btn-primary disabled btn-block"
+      end
   end
 
 end

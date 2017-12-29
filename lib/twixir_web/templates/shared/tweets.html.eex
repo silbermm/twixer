@@ -1,16 +1,14 @@
-<div class="row">
-  <%= for t <- @tweets do %>
-  <div class="panel panel-info">
-    <div class="panel-heading">
-      <%= user_link(@conn, t) %>
-      <span class="pull-right"> <%= tweet_time(t) %> </span>
-    </div>
-    <div class="panel-body">
-      <%= t.content %>
-    </div>
-    <div class="panel-footer">
-      <i class="fa fa-retweet" aria-hidden="true"></i>
-    </div>
+<%= for t <- @tweets do %>
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <%= user_link(@conn, t) %>
+    <span class="pull-right"> <%= tweet_time(t) %> </span>
   </div>
-  <% end %>
+  <div class="panel-body">
+    <%= t.content %>
+  </div>
+  <div class="panel-footer">
+    <i class="fa fa-retweet" aria-hidden="true"></i>
+  </div>
 </div>
+<% end %>

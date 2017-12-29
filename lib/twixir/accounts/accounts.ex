@@ -55,7 +55,7 @@ defmodule Twixir.Accounts do
     query
     |> where([u], u.email == ^email)
     |> Repo.one
-    |> Repo.preload([followees: query, followers: query])
+    |> Repo.preload([:followees, :followers])
   end
 
   @doc """
@@ -77,7 +77,7 @@ defmodule Twixir.Accounts do
   @doc """
   Follow a user
   """
-  def follow_user(user, followee) when is_integer(user) and is_integer(followee) do 
+  def follow_user(user, followee) when is_integer(user) and is_integer(followee) do
     changeset =
       %Follows{}
       |> cast(%{follower_id: user, followee_id: followee}, [:follower_id, :followee_id])
