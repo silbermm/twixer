@@ -114,6 +114,20 @@ defmodule Twixir.Accounts do
     user.followers
   end
 
+  @doc """
+  Find a user given some search term
+  """
+  def find_user(search_term) do
+    query = safe_user_query()
+    Repo.all(
+      from u in User,
+      where: ilike(u.email, ^"#{search_term}%"),
+      or_where: ilike(u.first_name, ^"#{search_term}%"),
+      or_where: ilike(u.last_name, ^"#{search_term}%"),
+      preload: [:followees, :followers, :tweets]
+    )
+  end
+
   defp safe_user_query() do
     from f in User, select: %User{id: f.id, email: f.email, first_name: f.first_name, last_name: f.last_name}
   end

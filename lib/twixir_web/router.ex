@@ -32,7 +32,7 @@ defmodule TwixirWeb.Router do
 
     get "/explore", ExploreController, :index
 
-    post "/search/user/:search_term", SearchController, :find_user
+    get "/search", SearchController, :search
 
     get "/:user_id",        PageController, :show_user
     get "/follow/:user_id", PageController, :follow
