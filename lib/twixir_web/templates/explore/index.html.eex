@@ -1,4 +1,6 @@
-<%= render TwixirWeb.SharedView, "search.html", assigns %>
+<div class="col-md-12">
+  <%= render TwixirWeb.SharedView, "search.html", assigns %>
+</div>
 <div class="col-md-12">
   <%= render TwixirWeb.SharedView, "tweets.html", assigns %>
 </div>

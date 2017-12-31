@@ -1,4 +1,4 @@
-<%= form_for @conn, search_path(@conn, :search), [method: :get, class: "form-inline pull-right"], fn f -> %>
+<%= form_for @conn, search_path(@conn, :search), [method: :get, class: "form-inline"], fn f -> %>
   <div class="form-group">
     <label>Find People</label>
     <%= text_input f, :user, class: "form-control" %>
