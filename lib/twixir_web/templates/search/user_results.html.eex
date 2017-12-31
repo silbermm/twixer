@@ -1,0 +1,3 @@
+<%= for user <- @results do %>
+  <%= render TwixirWeb.SharedView, "profile.html", conn: @conn, user: user, tweets: user.tweets %>
+<% end %>

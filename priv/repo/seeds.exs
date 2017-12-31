@@ -6,7 +6,7 @@ alias Twixir.Accounts.User
 alias Twixir.Stream.Tweet
 
 wayne = Repo.insert!(%User{email: "wayne.shortergmail.com", first_name: "Wayne", last_name: "Shorter"})
-coltrane = Repo.insert!(%User{email: "john.coletrane@gmail.com", first_name: "John", last_name: "Coletrane"})
+coltrane = Repo.insert!(%User{email: "john.coltrane@gmail.com", first_name: "John", last_name: "Coltrane"})
 miles = Repo.insert!(%User{email: "miles.davis@gmail.com", first_name: "Miles", last_name: "Davis"})
 ornette = Repo.insert!(%User{email: "ornette.coleman@gmail.com", first_name: "Ornette", last_name: "Coleman"})
 
