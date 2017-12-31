@@ -1,6 +1,5 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <img src="https://placeimg.com/100/100/animals/grayscale">
     <h5> <%= @user.first_name %> <%= @user.last_name %> </h5>
     <h6> <%= @user.email %> </h6>
     <p> <small> <%= follows_text(@conn, @user) %> </small> </p>
@@ -18,7 +17,7 @@
       <div class="col-md-12 col-xs-12">
         <p class="text-primary">
           Followers
-          <span class="badge"> <%= Enum.count(@user.followees) %> </span>
+          <span class="badge"> <%= Enum.count(@user.followers) %> </span>
         </p>
       </div>
 

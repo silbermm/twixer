@@ -57,9 +57,10 @@ defmodule TwixirWeb.PageControllerTest do
     {:ok, _tweet} = Repo.insert(%Tweet{content: "Tweet1", user_id: user.id})
 
     register_followee = Accounts.registration_changeset(%User{}, @valid_followee)
-    {:ok, user2} = Repo.insert(register_followee)
-    {:ok, _tweet} = Repo.insert(%Tweet{content: "Tweet2", user_id: user2.id})
-    follow = Accounts.follow_user(user2.id, user.id)
+    {:ok, followee} = Repo.insert(register_followee)
+    {:ok, _tweet} = Repo.insert(%Tweet{content: "Tweet2", user_id: followee.id})
+
+    follow = Accounts.follow_user(user.id, followee.id)
     conn =
       conn
       |> Accounts.Guardian.Plug.sign_in(user)
@@ -97,4 +98,40 @@ defmodule TwixirWeb.PageControllerTest do
     assert html_response(conn, 302)
     assert redirected_to(conn) == "/another%40gmail.com"
   end
+
+  test "follow a user, correct number of followees/followers", %{conn: conn} do
+    register = Accounts.registration_changeset(%User{}, @valid_attributes)
+    {:ok, user} = Repo.insert(register)
+
+    register2 = Accounts.registration_changeset(%User{}, @valid_followee)
+    {:ok, user2} = Repo.insert(register2)
+
+    conn =
+      conn
+      |> Accounts.Guardian.Plug.sign_in(user)
+      |> get("/follow/#{user2.email}")
+
+    current = Accounts.get_user_by_email(user.email)
+    assert Enum.count(current.followees) == 1
+    assert Enum.count(current.followers) == 0
+  end
+
+  test "homepage shows followers/followees", %{conn: conn} do
+    register = Accounts.registration_changeset(%User{}, @valid_attributes)
+    {:ok, user} = Repo.insert(register)
+
+    register2 = Accounts.registration_changeset(%User{}, @valid_followee)
+    {:ok, user2} = Repo.insert(register2)
+
+    Accounts.follow_user(user.id, user2.id)
+
+    conn =
+      conn
+      |> Accounts.Guardian.Plug.sign_in(user)
+      |> get("/")
+
+    assert html_response(conn, 200) =~ "Following\n          <span class=\"badge\"> 1 </span>"
+    assert html_response(conn, 200) =~ "Followers\n          <span class=\"badge\"> 0 </span>"
+  end
+
 end

@@ -77,10 +77,10 @@ defmodule Twixir.Accounts do
   @doc """
   Follow a user
   """
-  def follow_user(user, followee) when is_integer(user) and is_integer(followee) do
+  def follow_user(user_id, followee_id) when is_integer(user_id) and is_integer(followee_id) do
     changeset =
       %Follows{}
-      |> cast(%{follower_id: user, followee_id: followee}, [:follower_id, :followee_id])
+      |> cast(%{follower_id: followee_id, followee_id: user_id}, [:follower_id, :followee_id])
       |> unique_constraint(:followees, name: :follows_follower_id_followee_id_index, message: "Already following user.")
     Repo.insert(changeset)
   end

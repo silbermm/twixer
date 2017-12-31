@@ -66,6 +66,20 @@ defmodule Twixir.AccountsTest do
     assert {:ok, _re} = result
   end
 
+  test "follow a user updates followees" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+
+    result = Accounts.follow_user(user.id, followee.id)
+    assert {:ok, _re} = result
+
+    me = Accounts.get_user_by_email(user.email)
+    assert Enum.count(me.followees) == 1
+    assert Enum.count(me.followers) == 0
+  end
+
   test "list users that I follow" do
     user = Accounts.user_changeset(%User{}, @valid_attrs)
     {:ok, user} = Repo.insert(user)
