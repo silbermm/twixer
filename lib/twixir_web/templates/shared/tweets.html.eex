@@ -8,7 +8,14 @@
     <%= t.content %>
   </div>
   <div class="panel-footer">
-    <i class="fa fa-retweet" aria-hidden="true"></i>
+    <%= form_for @conn, tweet_path(@conn, :retweet), [class: "button-row-form"], fn f-> %>
+      <%= hidden_input f, :tweet_id, value: t.id %>
+      <button type="submit" class="btn btn-link">
+        <span class="<%= retweet_class(t) %>">
+          <i class="fa fa-retweet" aria-hidden="true"></i> <%= retweet_count(t) %>
+        </span>
+      </button>
+    <% end %>
   </div>
 </div>
 <% end %>

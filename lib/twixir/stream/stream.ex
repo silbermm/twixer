@@ -28,42 +28,44 @@ defmodule Twixir.Stream do
   end
 
   def get_users_tweets(user) do
-    my_tweets =
-      Repo.all from t in Tweet,
-        join: u in assoc(t, :user),
-        where: u.id == ^user.id,
-        preload: [:user, :retweets]
-    my_retweets =
+    my_tweets = get_tweets(user.email)
+    my_retweets = get_retweets(user)
+    my_followees_tweets =
       user
-      |> get_retweets
-      |> Enum.filter(fn(t) ->
-        result = Enum.find(Accounts.list_followees(user), &(&1.id == t.user_id))
-        result == nil
+      |> get_followees_tweets
+      |> Enum.filter(fn(t) -> 
+        Enum.find(my_retweets, &(&1.id == t.id)) == nil
       end)
-    [my_tweets, my_retweets, get_followees_tweets(user)]
+    [my_tweets, my_retweets, my_followees_tweets]
     |> Enum.concat
     |> Enum.sort(&(&1.inserted_at > &2.inserted_at))
+  end
+
+  def get_tweet(tweet_id) do
+    Repo.one from t in Tweet,
+      where: t.id == ^tweet_id
   end
 
   def get_tweets(email) do
     Repo.all from t in Tweet,
       join: u in assoc(t, :user),
       where: u.email == ^email,
-      preload: [:user]
+      preload: [:user, :retweets]
   end
 
   def get_retweets(user) do
-    Repo.all from t in Tweet,
+    Repo.all(from t in Tweet,
       join: u in assoc(t, :user),
       join: r in assoc(t, :retweets),
       where: r.user_id == ^user.id and not(is_nil(r.id)),
-      preload: [:user, :retweets]
+      preload: [:user, :retweets])
+    |> Enum.map(fn(t) -> %{t | is_retweet: true} end)
   end
 
   def get_public_tweets() do
     Repo.all from t in Tweet,
       order_by: [desc: t.inserted_at],
-      preload: [:user]
+      preload: [:user, :retweets]
   end
 
   def get_followees_tweets(user) do
@@ -76,7 +78,7 @@ defmodule Twixir.Stream do
       join: u in assoc(t, :user),
       where: u.id in ^ids,
       order_by: [desc: t.inserted_at],
-      preload: [:user]
+      preload: [:user, :retweets]
   end
 
   def tweet_changeset(%Tweet{} = tweet, attrs \\ %{}) do

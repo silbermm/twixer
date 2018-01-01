@@ -27,8 +27,9 @@ defmodule TwixirWeb.Router do
     get    "/register", UserController, :register
     post   "/register", UserController, :create
 
-    get  "/tweet", TweetController, :index
-    post "/tweet", TweetController, :create
+    get  "/tweet",             TweetController, :index
+    post "/tweet",             TweetController, :create
+    post "/retweet", TweetController, :retweet
 
     get "/explore", ExploreController, :index
 

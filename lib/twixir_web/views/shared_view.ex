@@ -13,6 +13,18 @@ defmodule TwixirWeb.SharedView do
     "#{d.year}-#{d.month}-#{d.day} #{d.hour}:#{d.minute}"
   end
 
+  def retweet_count(tweet) do
+    Enum.count(tweet.retweets)
+  end
+
+  def retweet_class(tweet) do
+    if (tweet.is_retweet) do
+      "text-success"
+    else
+      "text-primary"
+    end
+  end
+
   def follows_text(conn, %{"followees" => followees} = _tweeter) do
     if ViewHelper.logged_in?(conn) do
       current = ViewHelper.current_user(conn)

@@ -4,6 +4,7 @@ defmodule TwixirWeb.PageControllerTest do
   alias Twixir.Accounts.User
   alias Twixir.Accounts
   alias Twixir.Stream.Tweet
+  alias Twixir.Stream
 
   @valid_attributes %{
     email: "silbermm@gmail.com",
@@ -132,6 +133,26 @@ defmodule TwixirWeb.PageControllerTest do
 
     assert html_response(conn, 200) =~ "Following\n          <span class=\"badge\"> 1 </span>"
     assert html_response(conn, 200) =~ "Followers\n          <span class=\"badge\"> 0 </span>"
+  end
+
+  test "show number of retweets in user stream", %{conn: conn} do
+    register = Accounts.registration_changeset(%User{}, @valid_attributes)
+    {:ok, user} = Repo.insert(register)
+    {:ok, _tweet} = Repo.insert(%Tweet{content: "Tweet1", user_id: user.id})
+
+    register_followee = Accounts.registration_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(register_followee)
+    {:ok, tweet} = Repo.insert(%Tweet{content: "Tweet2", user_id: followee.id})
+
+    {:ok, retweet} = Stream.retweet(user, tweet)
+
+    conn =
+      conn
+      |> Accounts.Guardian.Plug.sign_in(user)
+      |> get("/")
+
+    assert html_response(conn, 200) =~ "1"
+
   end
 
 end

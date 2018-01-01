@@ -23,9 +23,23 @@ defmodule TwixirWeb.TweetController do
         conn
         |> redirect(to: page_path(conn, :index))
       {:error, changeset} ->
+        IO.inspect changeset
         conn
         |> put_status(500)
         |> put_flash(:error, "Unable to tweet")
+        |> render("index.html", changeset: changeset)
+    end
+  end
+
+  def retweet(conn, %{"tweet_id" => tweet_id} = _params) do
+    current_user = Accounts.Guardian.Plug.current_resource(conn)
+    tweet = Stream.get_tweet(tweet_id)
+    case Stream.retweet(current_user, tweet) do
+      {:ok, _} -> redirect(conn, to: page_path(conn, :index))
+      {:error, changeset} ->
+        conn
+        |> put_status(500)
+        |> put_flash(:error, "Unable to retweet")
         |> render("index.html", changeset: changeset)
     end
   end

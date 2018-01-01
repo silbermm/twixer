@@ -7,7 +7,7 @@ defmodule Twixir.Stream.Tweet do
 
   schema "tweets" do
     field :content, :string
-
+    field :is_retweet, :boolean, default: false, virtual: true
     timestamps()
     belongs_to :user, User
 
