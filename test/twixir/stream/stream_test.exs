@@ -80,12 +80,115 @@ defmodule Twixir.StreamTest do
     {:ok, user} = Repo.insert(user)
     followee = Accounts.user_changeset(%User{}, @valid_followee)
     {:ok, followee} = Repo.insert(followee)
-    {:ok, result} = Accounts.follow_user(user, followee)
+    {:ok, _result} = Accounts.follow_user(user, followee)
+
+    tweet_changeset = Stream.tweet_changeset(%{@valid_followee_tweet | user_id: followee.id})
+    {:ok, _tweet} = Stream.create_tweet(tweet_changeset)
+
+    [retrieved_tweet] = Stream.get_followees_tweets(user)
+    assert @valid_followee_tweet.content == retrieved_tweet.content
+  end
+
+  test "retweet a tweet" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
 
     tweet_changeset = Stream.tweet_changeset(%{@valid_followee_tweet | user_id: followee.id})
     {:ok, tweet} = Stream.create_tweet(tweet_changeset)
 
-    [retrieved_tweet] = Stream.get_followees_tweets(user)
-    assert @valid_followee_tweet.content == retrieved_tweet.content
+    {:ok, retweet} = Stream.retweet(user, tweet)
+    assert retweet.tweet_id == tweet.id
+  end
+
+  test "can't retweet own tweet" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    tweet_changeset = Stream.tweet_changeset(%{@valid_tweet | user_id: user.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+
+    assert {:error, %{errors: [user_id: user_id_err]}} = Stream.retweet(user, tweet)
+    assert user_id_err == {"Cannot retweet own tweet", []}
+  end
+
+  test "cannot retweet same tweet more than once" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+
+    tweet_changeset = Stream.tweet_changeset(%{@valid_followee_tweet | user_id: followee.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+
+    {:ok, retweet} = Stream.retweet(user, tweet)
+    assert retweet.tweet_id == tweet.id
+
+    assert {:error, _} = Stream.retweet(user, tweet)
+  end
+
+  test "gets correct number of retweets" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+
+    tweet_changeset = Stream.tweet_changeset(%{@valid_followee_tweet | user_id: followee.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+    {:ok, _retweet} = Stream.retweet(user, tweet)
+
+    [only_tweet] = Stream.get_users_tweets(followee)
+    assert Enum.count(only_tweet.retweets) == 1
+  end
+
+  test "gets only retweets for user" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    tweet_changeset = Stream.tweet_changeset(%{@valid_tweet | user_id: user.id})
+    {:ok, _} = Stream.create_tweet(tweet_changeset)
+
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+
+    tweet_changeset = Stream.tweet_changeset(%{@valid_followee_tweet | user_id: followee.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+    {:ok, _retweet} = Stream.retweet(user, tweet)
+
+    assert [only_tweet] = Stream.get_retweets(user)
+    assert only_tweet.content == tweet.content
+  end
+
+  test "shows my retweets as a tweet in timeline" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    tweet_changeset = Stream.tweet_changeset(%{@valid_tweet | user_id: user.id})
+    {:ok, _} = Stream.create_tweet(tweet_changeset)
+
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+
+    tweet_changeset = Stream.tweet_changeset(%{@valid_followee_tweet | user_id: followee.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+    {:ok, _retweet} = Stream.retweet(user, tweet)
+
+    my_stream = Stream.get_users_tweets(user)
+    assert Enum.count(my_stream) == 2
+  end
+
+  test "does not show my retweeted tweet in my stream if I follow the user" do
+    user = Accounts.user_changeset(%User{}, @valid_attrs)
+    {:ok, user} = Repo.insert(user)
+    tweet_changeset = Stream.tweet_changeset(%{@valid_tweet | user_id: user.id})
+    {:ok, _} = Stream.create_tweet(tweet_changeset)
+
+    followee = Accounts.user_changeset(%User{}, @valid_followee)
+    {:ok, followee} = Repo.insert(followee)
+    Accounts.follow_user(user, followee)
+    tweet_changeset = Stream.tweet_changeset(%{@valid_followee_tweet | user_id: followee.id})
+    {:ok, tweet} = Stream.create_tweet(tweet_changeset)
+    {:ok, _retweet} = Stream.retweet(user, tweet)
+
+    my_stream = Stream.get_users_tweets(user)
+    assert Enum.count(my_stream) == 2
   end
 end

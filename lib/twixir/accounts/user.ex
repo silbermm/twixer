@@ -3,6 +3,7 @@ defmodule Twixir.Accounts.User do
 
   use Ecto.Schema
   alias Twixir.Stream.Tweet
+  alias Twixir.Stream.Retweet
 
   schema "users" do
     field :email, :string
@@ -12,6 +13,7 @@ defmodule Twixir.Accounts.User do
     field :password, :string, virtual: true
 
     has_many :tweets, Tweet
+    has_many :retweets, Retweet
 
     many_to_many :followees, __MODULE__, join_through: "follows", join_keys: [followee_id: :id, follower_id: :id]
     many_to_many :followers, __MODULE__, join_through: "follows", join_keys: [follower_id: :id, followee_id: :id]
