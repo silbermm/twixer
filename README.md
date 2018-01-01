@@ -14,6 +14,3 @@ Twitter implemented in Elixir
  * Setup the DB `mix ecto.setup`
  * Finally, start the server `mix phx.server` and browse to [http://localhost:4000](http://localhost:4000)
 
-## Running Integration Tests
-
-## Running E2E Tests
