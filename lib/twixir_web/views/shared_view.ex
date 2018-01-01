@@ -2,6 +2,7 @@ defmodule TwixirWeb.SharedView do
   use TwixirWeb, :view
 
   alias TwixirWeb.ViewHelper
+  alias Twixir.Accounts.User
 
   def user_link(conn, tweet) do
     link "#{tweet.user.first_name} #{tweet.user.last_name}",
@@ -15,6 +16,16 @@ defmodule TwixirWeb.SharedView do
 
   def retweet_count(tweet) do
     Enum.count(tweet.retweets)
+  end
+
+  def is_retweet_disabled(conn, tweet) do
+    with true <- ViewHelper.logged_in?(conn),
+         current <- ViewHelper.current_user(conn),
+         false <- current.id == tweet.user_id do
+      ""
+    else
+      _ -> "disabled"
+    end
   end
 
   def retweet_class(tweet) do

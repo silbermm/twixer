@@ -10,7 +10,7 @@
   <div class="panel-footer">
     <%= form_for @conn, tweet_path(@conn, :retweet), [class: "button-row-form"], fn f-> %>
       <%= hidden_input f, :tweet_id, value: t.id %>
-      <button type="submit" class="btn btn-link">
+      <button type="submit" class="btn btn-link" <%= is_retweet_disabled(@conn, t) %> >
         <span class="<%= retweet_class(t) %>">
           <i class="fa fa-retweet" aria-hidden="true"></i> <%= retweet_count(t) %>
         </span>
